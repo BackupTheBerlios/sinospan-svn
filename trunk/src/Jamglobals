@@ -1,0 +1,4 @@
+OPTIM = -O0 ;
+C++FLAGS = -g3 ;
+LINKFLAGS = -g3 ;
+HDRS = $(TOP) ;

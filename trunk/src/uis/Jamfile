@@ -1,0 +1,7 @@
+SubDir TOP uis ;
+
+C++FLAGS on <uis>ui_fltk$(SUFOBJ) = `fltk-config --cxxflags` ;
+
+Library uis : ui_fltk.cpp ;
+
+UILINKLIBS = `fltk-config --ldflags` ;

@@ -1,0 +1,4 @@
+SubDir TOP outs ;
+
+Library outs : out_jack.cpp ;
+OUTLINKLIBS = -ljack ;

@@ -1,0 +1,5 @@
+SubDir TOP modules oscfuncs ;
+
+Library oscfuncs : oscfunc_noise.cpp oscfunc_pulse.cpp oscfunc_sawdown.cpp
+	oscfunc_sawup.cpp oscfunc_sine.cpp oscfunc_triangle.cpp ;
+OSCFUNCLINKLIBS = -lm ;
