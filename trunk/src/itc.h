@@ -16,11 +16,11 @@ namespace ITC
 {
 
 enum EvFlag {
-	ITC_OWNER_UI=0,		// Event pending for the UI thread (rare)
-	ITC_OWNER_RENDER,	// Event pending for the rendering thread
-	ITC_OWNER_GCOLLECT,	// Event pending for the garbage collection
-				// thread
-	NUM_ITC_OWNERS		// Leave this at the end
+	OWNER_UI,	// Event pending for the UI thread (rare)
+	OWNER_RENDER,	// Event pending for the rendering thread
+	OWNER_GCOLLECT,	// Event pending for the garbage collection
+			// thread
+	NUM_ITC_OWNERS	// Leave this at the end
 };
 
 // Note on unit conventions:
@@ -39,7 +39,7 @@ void R_GetEvents(EvFlag owner);
 
 // Defer a function call to another thread. Returns false on failure (most
 // likely because all the slots are full), true otherwise.
-bool SendEvent(EvFlag target, void (*func)(void*), void *data);
+bool R_SendEvent(EvFlag target, void (*func)(void*), void *data);
 };
 
 #endif
