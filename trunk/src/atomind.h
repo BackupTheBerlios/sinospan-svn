@@ -18,8 +18,8 @@ Licensed under the Open Software License version 2.1
 class AtomicIndex {
 public:
 	AtomicIndex(int _max); ~AtomicIndex();
-	AtomicIndex &operator++();
-	operator int();
+	void Inc();
+	int GetValue();
 protected:
 	int max;
 	sem_t sem1, sem2;

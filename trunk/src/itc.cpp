@@ -101,12 +101,10 @@ void ITC::Die()
 void ITC::R_GetEvents(EvFlag owner)
 {
 	// While we aren't at the production point:
-	while( (int) *pConsIdxs[owner] != (int) *pProdIdx)
+	while(pConsIdxs[owner]->GetValue() != pProdIdx->GetValue() )
 	{
-		// Step forward.
-		*pConsIdxs[owner]++;
 		// What slot are we on?
-		int consIdx = (int) *pConsIdxs[owner];
+		int consIdx = pConsIdxs[owner]->GetValue();
 		// Is this a pending event?
 		int flag;
 		sem_getvalue(&pEvents[consIdx]->pending, &flag);
@@ -124,19 +122,21 @@ void ITC::R_GetEvents(EvFlag owner)
 				pthread_rwlock_unlock(&pEvents[consIdx]->targetLock);
 			}
 		}
+		// Step forward.
+		pConsIdxs[owner]->Inc();
 	}
 }
 
 bool ITC::R_SendEvent(EvFlag target, void (*func)(void*), void *data)
 {
-	int slot = (int) *pProdIdx;
+	int slot = pProdIdx->GetValue();
 	int flag;
 	sem_getvalue(&pEvents[slot]->pending, &flag);
 	while(pthread_rwlock_trywrlock(&pEvents[slot]->targetLock) != 0 || flag == 1)
 	{
 		slot++;
 		if(slot >= NUM_EVENT_SLOTS) { slot = 0; }
-		if(slot == (int) *pConsIdxs[target] && slot != (int) *pProdIdx)
+		if(slot == pConsIdxs[target]->GetValue() && slot != pProdIdx->GetValue() )
 		{
 			// We're at the consumption point for the target! There's no room!
 			return false;
@@ -151,7 +151,7 @@ bool ITC::R_SendEvent(EvFlag target, void (*func)(void*), void *data)
 
 	pthread_rwlock_unlock(&pEvents[slot]->targetLock);
 
-	*pProdIdx++;
+	pProdIdx->Inc();
 
 	return true;
 }

@@ -50,6 +50,7 @@ void Synth::Die()
 void Synth::R_Panic()
 {
 	// TODO STUB
+	printf("DBG: Synth: panicking!\n");
 	return;
 }
 
@@ -71,7 +72,7 @@ void Synth::R_AddTrack(Track *trk)
 float Synth::R_Render(float time)
 {
 	// Grab all pending events.
-	ITC::R_GetEvents();
+	ITC::R_GetEvents(ITC::OWNER_RENDER);
 
 	if(pthread_mutex_trylock(&pSynUpLock) != 0)
 	{

@@ -19,7 +19,7 @@ AtomicIndex::~AtomicIndex()
 // second semaphore is incemented up to our internal maximum. Then the first is
 // decremented back to 0, and finally the second is decremented back to 0.
 
-AtomicIndex& AtomicIndex::operator++()
+void AtomicIndex::Inc()
 {
 	int vSem1, vSem2;
 	pGetSemVals(vSem1, vSem2);
@@ -44,10 +44,10 @@ AtomicIndex& AtomicIndex::operator++()
 		sem_trywait(&sem2);
 	}
 
-	return *this;
+	return;
 }
 
-AtomicIndex::operator int()
+int AtomicIndex::GetValue()
 {
 	int vSem1, vSem2;
 	pGetSemVals(vSem1, vSem2);
