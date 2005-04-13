@@ -16,10 +16,9 @@ namespace ITC
 {
 
 enum EvFlag {
-	OWNER_UI,	// Event pending for the UI thread (rare)
-	OWNER_RENDER,	// Event pending for the rendering thread
-	OWNER_GCOLLECT,	// Event pending for the garbage collection
-			// thread
+	OWNER_UI,	// Event pending for UI thread
+	OWNER_RENDER,	// Event pending for Render thread
+	OWNER_RAMDUDE,	// Event pending for RAMDude thread
 	NUM_ITC_OWNERS	// Leave this at the end
 };
 
