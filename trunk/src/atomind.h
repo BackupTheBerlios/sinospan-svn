@@ -18,11 +18,13 @@ Licensed under the Open Software License version 2.1
 class AtomicIndex {
 public:
 	AtomicIndex(int _max); ~AtomicIndex();
+	// Increment this index
 	void Inc();
+	// Get the value of this index
 	int GetValue();
 protected:
 	int max;
-	sem_t sem1, sem2;
+	sem_t sem1;
 	inline void pGetSemVals(int &val1, int &val2);
 };
 
