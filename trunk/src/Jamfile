@@ -7,7 +7,7 @@ SubInclude TOP uis ;
 SubDir TOP ;
 
 Main sinospan : atomind.cpp cell.cpp itc.cpp main.cpp module.cpp note.cpp
-					out.cpp synth.cpp track.cpp ui.cpp ;
+			out.cpp ramdude.cpp synth.cpp track.cpp ui.cpp ;
 LinkLibraries sinospan : modules outs uis ;
 LINKLIBS on sinospan$(SUFEXE) = $(MODULELINKLIBS) $(OUTLINKLIBS) $(UILINKLIBS) ;
 
