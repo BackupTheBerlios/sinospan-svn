@@ -42,3 +42,7 @@ static Driver *pMakeOutDriver()
 
 	return ret;
 }
+
+Out::Driver::~Driver() {}
+bool Out::Driver::Go() { return false; }
+bool Out::Driver::Stop() { return false; }

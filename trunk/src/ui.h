@@ -15,12 +15,12 @@ void Loop();
 
 class Driver {
 public:
-	virtual ~Driver() {}
-	virtual bool Go(int argc, char *argv[]) {}
-	virtual bool Stop() {}
+	virtual ~Driver();
+	virtual bool Go(int argc, char *argv[]);
+	virtual bool Stop();
 
 	// Run the UI's main loop.
-	virtual void Loop() {}
+	virtual void Loop();
 };
 };
 

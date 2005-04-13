@@ -19,9 +19,9 @@ bool Init(); bool Go(); bool Stop(); void Die();
 // interface.
 class Driver {
 public:
-	virtual     ~Driver() {}
-	virtual bool Go()     {}
-	virtual bool Stop()   {}
+	virtual     ~Driver();
+	virtual bool Go();
+	virtual bool Stop();
 };
 
 };	

@@ -23,6 +23,8 @@ bool RAMDude::Init()
 {
 	sem_init(&pSleepSem, 0, 0);
 	sem_init(&pQuitSem, 0, 0);
+
+	return true;
 }
 
 static void *pRAMDudeMain(void *nul);
@@ -33,6 +35,8 @@ bool RAMDude::Go()
 	// Reset the quit semaphore.
 	while(sem_trywait(&pQuitSem) == 0) {}
 	pthread_create(&pRAMDudeThread, 0x0, &pRAMDudeMain, 0x0);
+	
+	return true;
 }
 
 bool RAMDude::Stop()
@@ -44,6 +48,8 @@ bool RAMDude::Stop()
 	// the quit semaphore is posted and we whack the thread. This is
 	// intentional -- there may be a few other things it needs to dealloc!
 	pthread_join(pRAMDudeThread, 0x0);
+
+	return true;
 }
 
 void RAMDude::Die()
@@ -69,4 +75,6 @@ static void *pRAMDudeMain(void *nul)
 		sem_wait(&pSleepSem);
 		ITC::R_GetEvents(ITC::OWNER_RAMDUDE);
 	}
+
+	return 0x0;
 }

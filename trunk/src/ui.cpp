@@ -47,3 +47,9 @@ static Driver *pMakeUiDriver()
 	
 	return ret;
 }
+
+
+UI::Driver::~Driver() {}
+bool UI::Driver::Go(int argc, char *argv[]) { return false; }
+bool UI::Driver::Stop() { return false; }
+void UI::Driver::Loop() {}

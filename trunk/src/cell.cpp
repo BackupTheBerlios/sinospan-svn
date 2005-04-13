@@ -16,10 +16,12 @@ void Cell::R_AddModule(Module *mod)
 	numMembs++;
 }
 
+/*
 static void DeferAddModule(Module *mdl)
 {
 	
 }
+*/
 
 void Cell::AddModule(Module *mdl) const
 {
