@@ -24,7 +24,7 @@ public:
 	int GetValue();
 protected:
 	int max;
-	sem_t sem1;
+	sem_t sem1, sem2;
 	inline void pGetSemVals(int &val1, int &val2);
 };
 
