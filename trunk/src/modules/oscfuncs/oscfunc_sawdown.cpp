@@ -1,4 +1,5 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "oscfunc_sawdown.h"
 
 float OscFunc_SawDown(float phase)

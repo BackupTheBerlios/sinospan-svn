@@ -1,6 +1,8 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "synth.h"
 
+// NOPORT
 #include <stdio.h>	// printf()
 #include <pthread.h>	// pthread_mutex_t, PTHREAD_MUTEX_INITIALIZER,
 			// pthread_mutex_lock(), pthread_mutex_unlock()
@@ -50,7 +52,6 @@ void Synth::Die()
 void Synth::R_Panic()
 {
 	// TODO STUB
-	printf("DBG: Synth: panicking!\n");
 	return;
 }
 
@@ -76,18 +77,19 @@ float Synth::R_Render(float time)
 
 	if(pthread_mutex_trylock(&pSynUpLock) != 0)
 	{
-		printf("DBG: State change -- no data.\n");
 		// During a state change. Don't be running yet.
 		return 0.0;
 	}
-	else if(!pSynUp)
+	else
 	{
 		pthread_mutex_unlock(&pSynUpLock);
-		// printf("DBG: Not running -- no data.\n");
-		// We're not (supposed to be) running
-		return 0.0;
+		if(!pSynUp)
+		{
+			pthread_mutex_unlock(&pSynUpLock);
+			// We're not (supposed to be) running
+			return 0.0;
+		}
 	}
-	pthread_mutex_unlock(&pSynUpLock);
 
 	// XXX TODO DANGER STUB
 	return 0.0;

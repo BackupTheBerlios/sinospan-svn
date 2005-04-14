@@ -1,6 +1,8 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "ramdude.h"
 
+// NOPORT
 #include <pthread.h>	// pthread_create
 #include <semaphore.h>	// sem_t, sem_init(), sem_destroy(), sem_wait(),
 			// sem_post()

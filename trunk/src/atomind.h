@@ -8,11 +8,13 @@ it to happen, thread 1 and thread 2 must increment it at very precise times
 relative to each other.) However, as we use them, only one thread ever
 increments them.
 
+Copyright (C) 2005 Ben Anderson
 Licensed under the Open Software License version 2.1
 */
 #ifndef SINOSPAN_ATOMIND_H
 #define SINOSPAN_ATOMIND_H
 
+// NOPORT
 #include <semaphore.h>	// sem_t
 
 class AtomicIndex {

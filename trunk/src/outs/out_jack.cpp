@@ -1,10 +1,11 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "out_jack.h"
 
 #include "synth.h"	// syn2Render()
 #include "itc.h"	// itc2GetEvents()
 
-#include <stdbool.h>	// true, false
+// NOPORT? (Does JACK even run on any non-POSIX systems?)
 #include <stdio.h>	// printf()
 
 #include <jack/jack.h>	// jack_port_t, jack_client_t, jack_client_new(),

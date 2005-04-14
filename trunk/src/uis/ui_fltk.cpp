@@ -1,4 +1,5 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "ui_fltk.h"
 
 #include <FL/Fl.h>

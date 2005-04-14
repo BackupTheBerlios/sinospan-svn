@@ -1,11 +1,13 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "track.h"
 
+// NOPORT?
 #include <stdio.h>	// printf()
 
 void Track::R_AddCell(Cell *cel)
 {
-	if(numMembs >= MAX_CELLS_PER_TRACK)
+	if(numMembs >= TRACK_MAX_CELLS)
 	{
 		// DANGER: THIS SHOULD NOT HAPPEN, EVER!
 		printf("ERROR: Tried to add a cell to a full track?\n");

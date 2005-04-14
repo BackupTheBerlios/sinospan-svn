@@ -1,10 +1,7 @@
-/*Licensed under the Open Software License version 2.1
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 
-STATUS:
-No technology implemented
-Still working on test environment.
-*/
-
+// NOPORT?
 #include <stdio.h>	// printf()
 
 #include "itc.h"
@@ -26,7 +23,6 @@ Still working on test environment.
 int main(int argc, char *argv[])
 {
 	// --- INITIALIZATION --- //
-	// I know how ugly this is, but it works, and it's efficient.
 	     if(!    ITC::Init() ) { printf("FATAL: main: Couldn't initialize ITC.\n"    ); }
 	else if(!RAMDude::Init() ) { printf("FATAL: main: Couldn't initialize RAMDude.\n"); }
 	else if(!  Synth::Init() ) { printf("FATAL: main: Couldn't initialize synth.\n"  ); }
@@ -56,12 +52,12 @@ int main(int argc, char *argv[])
 		if(!    ITC::Stop() ) { printf("ERROR: main: Couldn't deactivate ITC.\n"    ); }
 
 		// -- DEINITIALIZATION --- //
-		UI::Die();
-		// Seq::Die();
-		Out::Die();
-		Synth::Die();
+		     UI::Die();
+		//    Seq::Die();
+		    Out::Die();
+		  Synth::Die();
 		RAMDude::Die();
-		ITC::Die();
+		    ITC::Die();
 
 		return 0;
 	}

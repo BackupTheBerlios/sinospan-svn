@@ -1,6 +1,8 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "atomind.h"
 
+// NOPORT
 #include <semaphore.h>	// sem_init(), sem_destroy(), sem_trywait(), sem_post()
 
 AtomicIndex::AtomicIndex(int _max): max(_max)

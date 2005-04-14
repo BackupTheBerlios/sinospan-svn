@@ -1,14 +1,16 @@
 /*
-Inter-thread communication engine. Events are passed from the MIDI and UI
-threads via this system. Most of synth and its cronies have wrappers available
-for rendering-thread-only functions that just generate events here.
+System used to make other threads execute arbitrary functions. Used largely for
+doing not-RT-safe things that need to be done without dedicating entire
+subsystems to it, and changing synth parameters without having to worry about
+thread races (by deferring the parameter changes to the thread that does the
+actual rendering). Called ITC (Inter-Thread Communication) for traditional
+reasons.
 
+Copyright (C) 2005 Ben Anderson
 Licensed under the Open Software License version 2.1
 */
 #ifndef SINOSPAN_ITC_H
 #define SINOSPAN_ITC_H
-
-#include <pthread.h>	// pthread_mutex_t
 
 #include "note.h"
 

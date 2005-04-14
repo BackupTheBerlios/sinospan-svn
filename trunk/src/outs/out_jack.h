@@ -1,6 +1,7 @@
 /*
 JACK output.
 
+Copyright (C) 2005 Ben Anderson
 Licensed under the Open Software License version 2.1
 */
 #ifndef SINOSPAN_OUT_JACK_H

@@ -2,6 +2,7 @@
 A row of cells. Each cell takes data from the previous cell (if any) and makes
 data for the next cell (or output if there isn't a next cell).
 
+Copyright (C) 2005 Ben Anderson
 Licensed under the Open Software License version 2.1
 */
 #ifndef SINOSPAN_TRACK_H
@@ -9,11 +10,11 @@ Licensed under the Open Software License version 2.1
 
 #include "cell.h"
 
-#define MAX_CELLS_PER_TRACK 256
+#define TRACK_MAX_CELLS 256
 
 class Track
 {
-	Cell *membs[MAX_CELLS_PER_TRACK];
+	Cell *membs[TRACK_MAX_CELLS];
 	unsigned short int numMembs;
 
 	// Add another cell to this track.

@@ -4,10 +4,12 @@ externally managed by e.g. JACK, CA).
 
 This is used by render.
 
+Copyright (C) 2005 Ben Anderson
 Licensed under the Open Software License version 2.1
 */
 #ifndef SINOSPAN_OUT_H
 #define SINOSPAN_OUT_H
+
 namespace Out {
 bool Init(); bool Go(); bool Stop(); void Die();
 
@@ -24,5 +26,6 @@ public:
 	virtual bool Stop();
 };
 
-};	
+};
+
 #endif

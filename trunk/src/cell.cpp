@@ -1,6 +1,8 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "cell.h"
 
+// NOPORT?
 #include <stdio.h>	// printf()
 
 void Cell::R_AddModule(Module *mod)
@@ -14,18 +16,6 @@ void Cell::R_AddModule(Module *mod)
 
 	membs[numMembs] = mod;
 	numMembs++;
-}
-
-/*
-static void DeferAddModule(Module *mdl)
-{
-	
-}
-*/
-
-void Cell::AddModule(Module *mdl) const
-{
-	
 }
 
 void Cell::R_Render(float time)

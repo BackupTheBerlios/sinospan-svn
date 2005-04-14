@@ -1,6 +1,7 @@
 /*
 Synthesis core (goes through itc for event processing, etc)
 
+Copyright (C) 2005 Ben Anderson
 Licensed under the Open Software License, version 2.1
 */
 #ifndef SINOSPAN_SYNTH_H
@@ -17,7 +18,7 @@ bool Init(); bool Go(); bool Stop(); void Die();
 // Immediately silence everything!
 void R_Panic(void);
 
-// Add a track
+// Add a track.
 void R_AddTrack(Track *trk);
 
 // Connect output to this port.

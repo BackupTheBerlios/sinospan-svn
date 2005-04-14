@@ -1,4 +1,5 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "oscfunc_triangle.h"
 
 float OscFunc_Triangle(float phase)

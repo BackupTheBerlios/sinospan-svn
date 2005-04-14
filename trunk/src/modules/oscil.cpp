@@ -1,7 +1,9 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "oscil.h"
 
-#include <math.h>	// floor()
+// NOPORT?
+#include <math.h>	// floorf()
 
 Oscil::Oscil(OscFunc *f, float p, float r): func(f), phase(p), freq(r)
 {

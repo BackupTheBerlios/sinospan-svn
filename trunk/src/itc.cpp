@@ -1,8 +1,8 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "itc.h"
 
-#include <stdio.h>	// printf()
-#include <unistd.h>	// usleep()
+// NOPORT
 #include <pthread.h>	// pthread_rwlock_t, pthread_rwlock_init(),
 			// pthread_rwlock_tryrdlock(),
 			// pthread_rwlock_trywrlock(), pthread_rwlock_unlock(),
@@ -34,7 +34,6 @@ struct ITC_Event {
 						sem_init(&pending, 0, 0); }
 	~ITC_Event() { sem_destroy(&pending);
 					pthread_rwlock_destroy(&targetLock); }
-
 };
 
 // Event array.

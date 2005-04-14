@@ -1,6 +1,8 @@
-/* Licensed under the Open Software License version 2.1 */
+/* Copyright (C) 2005 Ben Anderson
+   Licensed under the Open Software License version 2.1 */
 #include "module.h"
 
+// NOPORT?
 #include <stdlib.h>	// malloc(), free()
 
 void Module::allocPorts()
