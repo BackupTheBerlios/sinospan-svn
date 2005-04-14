@@ -42,14 +42,10 @@ void UI_FLTK::Loop()
 	Fl::run();
 }
 
-static void panicButCBs2(void*);
-
 static void panicButCB(Fl_Widget *w, void *nul)
 {
-	ITC::R_SendEvent(ITC::OWNER_RENDER, &panicButCBs2, 0);
-}
-
-static void panicButCBs2(void*)
-{
-	Synth::R_Panic();
+	ITC_DEFER(panicButCBs2, ITC::OWNER_RENDER, 0x0,
+	{
+		Synth::R_Panic();
+	});
 }
