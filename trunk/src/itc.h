@@ -41,4 +41,21 @@ void R_GetEvents(EvFlag owner);
 bool R_SendEvent(EvFlag target, void (*func)(void*), void *data);
 };
 
+// Convenience macro. Give it a name that's unique in the current scope and the
+// OWNER_ value for a thread and put a function body after it and that function
+// will be called in the other thread. Third arg is void pointer to the data to
+// pass to the function.
+// For example:
+// ITC_DEFER(callback5487835293284, ITC::OWNER_FOO, 0x0,
+// {
+//	printf("In Foo Thread.\n");
+// });
+#define ITC_DEFER(name, target, data, func) \
+class name \
+{ \
+public: \
+	static void callback(void *arg) func \
+}; \
+ITC::R_SendEvent(target, &name::callback, data);
+
 #endif
