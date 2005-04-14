@@ -45,7 +45,7 @@ void UI_FLTK::Loop()
 
 static void panicButCB(Fl_Widget *w, void *nul)
 {
-	ITC_DEFER(panicButCBs2, ITC::OWNER_RENDER, 0x0,
+	ITC_DEFER(callback_0, ITC::OWNER_RENDER, 0x0,
 	{
 		Synth::R_Panic();
 	});
