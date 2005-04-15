@@ -7,7 +7,7 @@
 
 void Cell::R_AddModule(Module *mod)
 {
-	if(numMembs >= MAX_MODULES_PER_CELL)
+	if(numMembs >= CELL_MAX_MODULES)
 	{
 		// DANGER: THIS SHOULD NOT HAPPEN, EVER!
 		printf("ERROR: Tried to add a module to a full cell?\n");
