@@ -46,3 +46,8 @@ void Module::deallocPorts()
 		free(outputs);
 	}
 }
+
+Module::~Module() {}
+unsigned short int Module::inCt() const { return 0; }
+unsigned short int Module::outCt() const { return 0; }
+void Module::R_Render(float time) {}
