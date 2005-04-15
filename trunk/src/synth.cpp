@@ -12,11 +12,7 @@
 
 using namespace Synth;
 
-#define MAX_NUM_TRACKS 32
-
-static Track *allTracks[MAX_NUM_TRACKS];
-static unsigned short int numTracks = 0;
-
+// XXX: Wouldn't a semaphore a la RAMDude be more efficient here?
 static bool pSynUp = false;
 static pthread_mutex_t pSynUpLock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -55,19 +51,54 @@ void Synth::R_Panic()
 	return;
 }
 
-void Synth::R_AddTrack(Track *trk)
+void Synth::AddTrack()
 {
-	if(numTracks >= MAX_NUM_TRACKS)
+	Track *trk = new Track;
+	ITC_DEFER(callback_0, ITC::OWNER_RENDER, trk, (void*) trk,
 	{
-		// DANGER: THIS SHOULD NOT HAPPEN, EVER!
-		printf("ERROR: Tried to add another track when already at max?\n");
-		return;
-	}
+		if(trackCt >= SYNTH_MAX_TRACKS)
+		{
+			// DANGER: THIS SHOULD NOT HAPPEN, EVER!
+			printf("ERROR: Tried to add another track when already at max?\n");
+			return;
+		}
 
-	allTracks[numTracks] = trk;
-	numTracks++;
+		tracks[trackCt] = trk;
+		trackCt++;
+	});
 
 	return;
+}
+
+void Synth::RemoveTrack(unsigned short int idx)
+{
+	struct funcdata { int idx, Track *trk };
+	funcdata *dt = new funcdata;
+	dt->idx = idx;
+	ITC_DEFER(callback_0, ITC::OWNER_RENDER, pdt, (void*) dt,
+	{
+		funcdata *dt = (funcdata*) pdt;
+		dt->trk = tracks[i];
+		trackCt--;
+		while(i < trackCt)
+		{
+			tracks[i] = tracks[i+1];
+			i++;
+		}
+		ITC_DEFER(callback_1, ITC::OWNER_RAMDUDE, pdt, (void*) dt,
+		{
+			dt = (funcdata*) pdt;
+			delete dt->trk;
+			delete dt;
+		});
+		RAMDude::Whack();
+	});
+}
+
+inline unsigned short int outCt() const
+{
+	// TODO: Stereo (or more!) support
+	return 1;
 }
 
 float Synth::R_Render(float time)
@@ -80,17 +111,26 @@ float Synth::R_Render(float time)
 		// During a state change. Don't be running yet.
 		return 0.0;
 	}
-	else
+	else if(!pSynUp)
 	{
 		pthread_mutex_unlock(&pSynUpLock);
-		if(!pSynUp)
+		// We're not (supposed to be) running
+		return 0.0;
+	}
+	pthread_mutex_unlock(&pSynUpLock);
+
+	float workBuf = 0.0;
+	unsigned short int i = 0;
+	while(i < trackCt)
+	{
+		tracks[i]->R_Render(time);
+		unsigned short int j = 0;
+		while(j < outCt() )
 		{
-			pthread_mutex_unlock(&pSynUpLock);
-			// We're not (supposed to be) running
-			return 0.0;
+			workBuf += *tracks[i]->outs[j]->read();
 		}
+		i++;
 	}
 
-	// XXX TODO DANGER STUB
-	return 0.0;
+	return workBuf;
 }
