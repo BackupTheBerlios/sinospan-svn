@@ -7,18 +7,21 @@ Licensed under the Open Software License version 2.1
 #ifndef SINOSPAN_CELL_H
 #define SINOSPAN_CELL_H
 
-#include "module.h"
+struct Module;
 
-#define MAX_MODULES_PER_CELL 64
+#define CELL_MAX_MODULES 64
 
 struct Cell
 {
 	// Modules in this cell.
-	Module *membs[MAX_MODULES_PER_CELL];
-	unsigned short int numMembs;
+	Module *membs[CELL_MAX_MODULES];
+	unsigned short int membCt;
 
 	// Add another module to this cell.
-	void R_AddModule(Module *mdl);
+	void R_AddModule(Module *md);
+
+	// Remove module at this index from this cell.
+	void R_RemoveModule(int id);
 
 	// Render for this much time since the last pass.
 	void R_Render(float time);

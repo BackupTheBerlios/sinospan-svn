@@ -12,8 +12,6 @@ Licensed under the Open Software License version 2.1
 #ifndef SINOSPAN_ITC_H
 #define SINOSPAN_ITC_H
 
-#include "note.h"
-
 namespace ITC
 {
 

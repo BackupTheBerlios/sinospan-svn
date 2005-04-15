@@ -8,17 +8,23 @@ Licensed under the Open Software License version 2.1
 #ifndef SINOSPAN_TRACK_H
 #define SINOSPAN_TRACK_H
 
-#include "cell.h"
+struct Cell;
+struct Plug;
 
 #define TRACK_MAX_CELLS 256
 
-class Track
+struct Track
 {
+	// Cells in this track.
 	Cell *membs[TRACK_MAX_CELLS];
-	unsigned short int numMembs;
+	unsigned short int membCt;
+	// Outputs of this track. Always Synth::outCt() number of elements.
+	Plug *outs[];
+	// Add another empty cell to this track.
+	void AddCell();
 
-	// Add another cell to this track.
-	void R_AddCell(Cell *cel);
+	// Remove the cell at this index from this track.
+	void RemoveCell(unsigned int idx);
 
 	// Render for this much time since the last pass.
 	void R_Render(float time);
