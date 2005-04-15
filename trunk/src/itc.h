@@ -52,11 +52,10 @@ bool R_SendEvent(EvFlag target, void (*func)(void*), void *data);
 // {
 //	printf("In Foo Thread.\n");
 // });
-#define ITC_DEFER(name, target, data, func) \
-class name \
+#define ITC_DEFER(name, target, datvar, data, func) \
+struct name \
 { \
-public: \
-	static void callback(void *arg) func \
+	static void callback(void *datvar) func \
 }; \
 ITC::R_SendEvent(target, &name::callback, data);
 
