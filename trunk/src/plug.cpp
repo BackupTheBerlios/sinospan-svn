@@ -42,7 +42,7 @@ inline bool Plug::IsConnected() const
 	return connjack != 0x0;
 }
 
-const float &Plug::operator()() const
+inline const float &Plug::read() const
 {
 	static const float silence = 0.0;
 	if(!IsConnected() ) { return silence; }

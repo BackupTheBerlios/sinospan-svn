@@ -22,7 +22,7 @@ class Plug
 	inline bool IsConnected() const;
 	// Get the data of the jack this is connected to. Safe to call even if
 	// not connected (returns 0.0 in that case.)
-	const float &operator()() const;
+	inline const float &read() const;
 private:
 	// The Jack we're connected to. 0x0 if not connected.
 	Jack *connjack;
