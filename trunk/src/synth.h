@@ -16,24 +16,25 @@ bool Init(); bool Go(); bool Stop(); void Die();
 
 #define SYNTH_MAX_TRACKS 32
 
-// Tracks in the synth. 
-static Track *tracks[SYNTH_MAX_TRACKS];
-static unsigned short int trackCt = 0;
+// Tracks in the synth.
+extern Track *tracks[];
+extern unsigned short int trackCt;
 
 // Convenience function: Add a track.
 void AddTrack();
 
 // Convenience function: Remove track at this index.
-void RemoveTrack(int idx);
+void RemoveTrack(unsigned short int idx);
 
 // Immediately silence everything!
 void R_Panic(void);
 
 // Get the number of output channels in the synth.
-inline unsigned short int outCt() const;
+inline unsigned short int outCt();
 
 // Render a frame for the given amount of time after the last frame.
 float R_Render(float time);
+
 };
 
 #endif

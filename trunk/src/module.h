@@ -18,13 +18,13 @@ struct Module
 	// Get the total number of output ports.
 	virtual unsigned short int outCt() const;
 	// This module's input plugs. Always inCt() number of elements.
-	Plug *inputs[];
+	Plug *inputs;
 	// The module's output jacks. Always outCt() number of elements.
-	Jack *outputs[];
+	Jack *outputs;
 	// Render for this much time after the last pass.
 	virtual void R_Render(float time);
 protected:
-	// Constructor utility functions.
+	// Convenience functions for derived classes.
 	void allocPorts();
 	void deallocPorts();
 };

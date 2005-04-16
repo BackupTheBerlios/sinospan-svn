@@ -9,8 +9,13 @@
 
 #include "itc.h"
 #include "track.h"
+#include "plug.h"
+#include "ramdude.h"
 
 using namespace Synth;
+
+Track *Synth::tracks[SYNTH_MAX_TRACKS];
+unsigned short int Synth::trackCt = 0;
 
 // XXX: Wouldn't a semaphore a la RAMDude be more efficient here?
 static bool pSynUp = false;
@@ -51,6 +56,8 @@ void Synth::R_Panic()
 	return;
 }
 
+// No, I'm not going to combine Track, Cell, and part of Synth into a container
+// class. GCC / GDB get confused as all hell as it is.
 void Synth::AddTrack()
 {
 	Track *trk = new Track;
@@ -59,11 +66,13 @@ void Synth::AddTrack()
 		if(trackCt >= SYNTH_MAX_TRACKS)
 		{
 			// DANGER: THIS SHOULD NOT HAPPEN, EVER!
-			printf("ERROR: Tried to add another track when already at max?\n");
+			printf(
+		     "ERROR: Tried to add another track when already at max?\n"
+			);
 			return;
 		}
 
-		tracks[trackCt] = trk;
+		tracks[trackCt] = (Track*) trk;
 		trackCt++;
 	});
 
@@ -72,22 +81,23 @@ void Synth::AddTrack()
 
 void Synth::RemoveTrack(unsigned short int idx)
 {
-	struct funcdata { int idx, Track *trk };
+	struct funcdata { unsigned short int idx; Track *trk; };
 	funcdata *dt = new funcdata;
 	dt->idx = idx;
 	ITC_DEFER(callback_0, ITC::OWNER_RENDER, pdt, (void*) dt,
 	{
 		funcdata *dt = (funcdata*) pdt;
-		dt->trk = tracks[i];
+		dt->trk = tracks[dt->idx];
 		trackCt--;
-		while(i < trackCt)
+
+		while(dt->idx < trackCt)
 		{
-			tracks[i] = tracks[i+1];
-			i++;
+			tracks[dt->idx] = tracks[dt->idx+1];
+			dt->idx++;
 		}
 		ITC_DEFER(callback_1, ITC::OWNER_RAMDUDE, pdt, (void*) dt,
 		{
-			dt = (funcdata*) pdt;
+			funcdata *dt = (funcdata*) pdt;
 			delete dt->trk;
 			delete dt;
 		});
@@ -95,7 +105,7 @@ void Synth::RemoveTrack(unsigned short int idx)
 	});
 }
 
-inline unsigned short int outCt() const
+inline unsigned short int Synth::outCt()
 {
 	// TODO: Stereo (or more!) support
 	return 1;
@@ -127,7 +137,7 @@ float Synth::R_Render(float time)
 		unsigned short int j = 0;
 		while(j < outCt() )
 		{
-			workBuf += *tracks[i]->outs[j]->read();
+			workBuf += tracks[i]->outs[j]->read();
 		}
 		i++;
 	}

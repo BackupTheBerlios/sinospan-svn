@@ -55,6 +55,6 @@ struct name \
 { \
 	static void callback(void *datvar) func \
 }; \
-ITC::R_SendEvent(target, &name::callback, data);
+ITC::R_SendEvent(target, &name::callback, data)
 
 #endif

@@ -35,14 +35,28 @@ void Plug::Disconnect()
 						// (we're the only plug
 						// connected and we're
 						// disconnecting).
+	connjack = 0x0;
+	below = above = 0x0;
 }
 
-inline bool Plug::IsConnected() const
+bool Plug::IsConnected() const
 {
 	return connjack != 0x0;
 }
 
-inline const float &Plug::read() const
+void Plug::DisconnectAll()
+{
+	// We don't have to do as much error checking here, as everyone is
+	// disconnecting.
+	if(!IsConnected() ) { return; }
+	if(below != 0x0) below->DisconnectAll();
+
+	above = 0x0;
+	connjack = 0x0;
+	below = 0x0;
+}
+
+const float &Plug::read() const
 {
 	static const float silence = 0.0;
 	if(!IsConnected() ) { return silence; }

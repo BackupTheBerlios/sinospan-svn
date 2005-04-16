@@ -2,49 +2,19 @@
    Licensed under the Open Software License version 2.1 */
 #include "module.h"
 
-// NOPORT?
-#include <stdlib.h>	// malloc(), free()
+#include "jack.h"
+#include "plug.h"
 
 void Module::allocPorts()
 {
-	if(inCt() > 0)
-	{
-		// Allocate
-		inputs = (Port***) malloc(sizeof(Port*) * inCt() );
-
-		// Initialize
-		int i = 0;
-		while(i < inCt() )
-		{
-			*inputs[i] = 0x0;
-			i++;
-		}
-	}
-	if(outCt() > 0)
-	{
-		// Allocate
-		outputs = (Port**) malloc(sizeof(Port) * outCt() );
-
-		// Initialize
-		int i = 0;
-		while(i < outCt() )
-		{
-			*outputs[i] = 0.0;
-			i++;
-		}
-	}
+	outputs = new Jack[outCt()];
+	 inputs = new Plug[ inCt()];
 }
 
 void Module::deallocPorts()
 {
-	if(inCt() > 0)
-	{
-		free(inputs);
-	}
-	if(outCt() > 0)
-	{
-		free(outputs);
-	}
+	delete[]  inputs;
+	delete[] outputs;
 }
 
 Module::~Module() {}

@@ -24,7 +24,7 @@ struct Track
 	void AddCell();
 
 	// Remove the cell at this index from this track.
-	void RemoveCell(unsigned int idx);
+	void RemoveCell(unsigned short int idx);
 
 	// Render for this much time since the last pass.
 	void R_Render(float time);

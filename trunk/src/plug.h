@@ -12,6 +12,7 @@ class Jack;
 
 class Plug
 {
+public:
 	Plug(); ~Plug();
 	// Connect to a jack, disconnecting from the current one first if we
 	// are presently connected.
@@ -19,10 +20,10 @@ class Plug
 	// Disconnect from the current jack.
 	void Disconnect();
 	// Is it connected?
-	inline bool IsConnected() const;
+	bool IsConnected() const;
 	// Get the data of the jack this is connected to. Safe to call even if
 	// not connected (returns 0.0 in that case.)
-	inline const float &read() const;
+	const float &read() const;
 private:
 	// The Jack we're connected to. 0x0 if not connected.
 	Jack *connjack;

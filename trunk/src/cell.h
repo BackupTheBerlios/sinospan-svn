@@ -18,10 +18,12 @@ struct Cell
 	unsigned short int membCt;
 
 	// Add another module to this cell.
-	void R_AddModule(Module *md);
+	// DANGER: Always allocate modules individually, and allocate them with
+	// new and not new[]!
+	void AddModule(Module *mdl);
 
 	// Remove module at this index from this cell.
-	void R_RemoveModule(int id);
+	void RemoveModule(unsigned short int idx);
 
 	// Render for this much time since the last pass.
 	void R_Render(float time);
