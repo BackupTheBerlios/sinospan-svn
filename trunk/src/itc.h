@@ -46,7 +46,7 @@ bool R_SendEvent(EvFlag target, void (*func)(void*), void *data);
 // will be called in the other thread. Third arg is void pointer to the data to
 // pass to the function.
 // For example:
-// ITC_DEFER(callback5487835293284, ITC::OWNER_FOO, 0x0,
+// ITC_DEFER(callback5487835293284, ITC::OWNER_FOO, nul, 0x0,
 // {
 //	printf("In Foo Thread.\n");
 // });
@@ -56,5 +56,8 @@ struct name \
 	static void callback(void *datvar) func \
 }; \
 ITC::R_SendEvent(target, &name::callback, data)
+
+#define ITC_DEFER_NOARG(name, target, func) \
+	ITC_DEFER(name, target, nul, 0x0, func)
 
 #endif
