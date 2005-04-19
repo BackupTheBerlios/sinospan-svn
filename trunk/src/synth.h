@@ -20,14 +20,11 @@ bool Init(); bool Go(); bool Stop(); void Die();
 extern Track *tracks[];
 extern unsigned short int trackCt;
 
-// Convenience function: Add a track.
-void AddTrack();
+// Add a track. Returns a pointer to the new track.
+Track *AddTrack();
 
-// Convenience function: Remove track at this index.
+// Remove track at this index.
 void RemoveTrack(unsigned short int idx);
-
-// Immediately silence everything!
-void R_Panic(void);
 
 // Get the number of output channels in the synth.
 inline unsigned short int outCt();

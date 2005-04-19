@@ -50,12 +50,6 @@ void Synth::Die()
 	return;
 }
 
-void Synth::R_Panic()
-{
-	// TODO STUB
-	return;
-}
-
 // No, I'm not going to combine Track, Cell, and part of Synth into a container
 // class. GCC / GDB get confused as all hell as it is.
 void Synth::AddTrack()
@@ -76,7 +70,7 @@ void Synth::AddTrack()
 		trackCt++;
 	});
 
-	return;
+	return trk;
 }
 
 void Synth::RemoveTrack(unsigned short int idx)
