@@ -9,6 +9,16 @@
 #include "cell.h"
 #include "ramdude.h"
 
+Track::Track()
+{
+	outs = new Plug[Synth::outCt()];
+}
+
+Track::~Track()
+{
+	delete[] outs;
+}
+
 // No, I'm not going to combine Track, Cell, and part of Synth into a container
 // class. GCC gets confused enough as it is, and the debugging symbols will
 // already quickly give you carpal tunnel.
@@ -16,7 +26,8 @@ void Track::AddCell()
 {
 	struct funcdata { Track *self; Cell *cel; };
 	funcdata *dt = new funcdata;
-	dt->cel = new Cell;
+	Cell *cel = new Cell;
+	dt->cel = cel;
 	dt->self = this;
 	ITC_DEFER(callback_0, ITC::OWNER_RENDER, pdt, (void*) dt,
 	{
@@ -39,6 +50,8 @@ void Track::AddCell()
 		});
 		RAMDude::Whack();
 	});
+	
+	return cel;
 }
 
 void Track::RemoveCell(unsigned short int idx)
