@@ -52,51 +52,40 @@ void Synth::Die()
 
 // No, I'm not going to combine Track, Cell, and part of Synth into a container
 // class. GCC / GDB get confused as all hell as it is.
-void Synth::AddTrack()
+void Synth::AddTrack(Track *trk)
 {
-	Track *trk = new Track;
-	ITC_DEFER(callback_0, ITC::OWNER_RENDER, trk, (void*) trk,
+	if(trackCt >= SYNTH_MAX_TRACKS)
 	{
-		if(trackCt >= SYNTH_MAX_TRACKS)
-		{
-			// DANGER: THIS SHOULD NOT HAPPEN, EVER!
-			printf(
-		     "ERROR: Tried to add another track when already at max?\n"
-			);
-			return;
-		}
-
-		tracks[trackCt] = (Track*) trk;
-		trackCt++;
-	});
-
-	return trk;
+		// DANGER: THIS SHOULD NOT HAPPEN, EVER!
+		printf(
+			"ERROR: Tried to add a track when full?\n"
+		);
+		return;
+	}
+	tracks[trackCt] = trk;
+	trackCt++;
 }
 
-void Synth::RemoveTrack(unsigned short int idx)
+void Synth::RemoveTrack(Track *trk)
 {
-	struct funcdata { unsigned short int idx; Track *trk; };
-	funcdata *dt = new funcdata;
-	dt->idx = idx;
-	ITC_DEFER(callback_0, ITC::OWNER_RENDER, pdt, (void*) dt,
+	unsigned int i = 0;
+	while(tracks[i] != trk)
 	{
-		funcdata *dt = (funcdata*) pdt;
-		dt->trk = tracks[dt->idx];
-		trackCt--;
-
-		while(dt->idx < trackCt)
-		{
-			tracks[dt->idx] = tracks[dt->idx+1];
-			dt->idx++;
-		}
-		ITC_DEFER(callback_1, ITC::OWNER_RAMDUDE, pdt, (void*) dt,
-		{
-			funcdata *dt = (funcdata*) pdt;
-			delete dt->trk;
-			delete dt;
-		});
-		RAMDude::Whack();
+		i++;
+		if(i >= SYNTH_MAX_TRACKS) return;
+	}
+	
+	trackCt--;
+	while(i < trackCt)
+	{
+		tracks[i] = tracks[i+1];
+		i++;
+	}
+	ITC_DEFER(callback_0, ITC::OWNER_RAMDUDE, trk, (void*) trk,
+	{
+		delete (Track*) trk;
 	});
+	RAMDude::Whack();
 }
 
 inline unsigned short int Synth::outCt()
@@ -131,7 +120,7 @@ float Synth::R_Render(float time)
 		unsigned short int j = 0;
 		while(j < outCt() )
 		{
-			workBuf += tracks[i]->outs[j]->read();
+			workBuf += tracks[i]->outs[j].read();
 		}
 		i++;
 	}

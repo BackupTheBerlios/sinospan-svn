@@ -20,13 +20,14 @@ struct Track
 	Cell *membs[TRACK_MAX_CELLS];
 	unsigned short int membCt;
 	// Outputs of this track. Always Synth::outCt() number of elements.
-	Plug *outs[];
+	Plug *outs;
 	// Add another empty cell to this track. Returns a pointer to the new 
 	// cell.
-	Cell *AddCell();
+	void AddCell(Cell *cel);
 
-	// Remove the cell at this index from this track.
-	void RemoveCell(unsigned short int idx);
+	// Remove the cell at this index from this track, deallocating it as
+	// well.
+	void RemoveCell(Cell *cel);
 
 	// Render for this much time since the last pass.
 	void R_Render(float time);

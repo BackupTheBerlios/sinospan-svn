@@ -23,7 +23,7 @@ struct Cell
 	void AddModule(Module *mdl);
 
 	// Remove module at this index from this cell.
-	void RemoveModule(unsigned short int idx);
+	void RemoveModule(Module *mdl);
 
 	// Render for this much time since the last pass.
 	void R_Render(float time);
