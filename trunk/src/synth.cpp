@@ -6,6 +6,8 @@
 #include <stdio.h>	// printf()
 #include <pthread.h>	// pthread_mutex_t, PTHREAD_MUTEX_INITIALIZER,
 			// pthread_mutex_lock(), pthread_mutex_unlock()
+#include <semaphore.h>	// sem_t, sem_init(), sem_destroy(), sem_post(),
+			// sem_trywait(), sem_getvalue()
 
 #include "itc.h"
 #include "track.h"
@@ -17,36 +19,33 @@ using namespace Synth;
 Track *Synth::tracks[SYNTH_MAX_TRACKS];
 unsigned short int Synth::trackCt = 0;
 
-// XXX: Wouldn't a semaphore a la RAMDude be more efficient here?
-static bool pSynUp = false;
-static pthread_mutex_t pSynUpLock = PTHREAD_MUTEX_INITIALIZER;
+sem_t pSynUp;
 
 bool Synth::Init()
 {
+	sem_init(&pSynUp);
 	return true;
 }
 
 bool Synth::Go()
 {
-	pthread_mutex_lock(&pSynUpLock);
-	pSynUp = true;
-	pthread_mutex_unlock(&pSynUpLock);
+	sem_post(&pSynUp);
 
 	return true;
 }
 
 bool Synth::Stop()
 {
-	pthread_mutex_lock(&pSynUpLock);
-	pSynUp = false;
-	pthread_mutex_unlock(&pSynUpLock);
+	if(!sem_trywait(&pSynUp) )
+		{ printf("ERROR: Failed to down SynUp semaphore!\n");
+								return false; }
 
 	return true;
 }
 
 void Synth::Die()
 {
-	Stop();
+	sem_destroy(&pSynUp);
 	return;
 }
 
@@ -96,22 +95,10 @@ inline unsigned short int Synth::outCt()
 
 float Synth::R_Render(float time)
 {
-	// Grab all pending events.
-	ITC::R_GetEvents(ITC::OWNER_RENDER);
-
-	if(pthread_mutex_trylock(&pSynUpLock) != 0)
-	{
-		// During a state change. Don't be running yet.
-		return 0.0;
-	}
-	else if(!pSynUp)
-	{
-		pthread_mutex_unlock(&pSynUpLock);
-		// We're not (supposed to be) running
-		return 0.0;
-	}
-	pthread_mutex_unlock(&pSynUpLock);
-
+	int synUpVal;
+	sem_getvalue(&SynUp, &synUpVal);
+	if(synUpVal == 0) { return 0.0; } // Synth is disabled.
+	
 	float workBuf = 0.0;
 	unsigned short int i = 0;
 	while(i < trackCt)
@@ -124,6 +111,6 @@ float Synth::R_Render(float time)
 		}
 		i++;
 	}
-
+	
 	return workBuf;
 }
