@@ -1,7 +1,7 @@
 SubDir TOP uis ;
 
-C++FLAGS on <uis>ui_gtk$(SUFOBJ) = `gtk-config --cflags` ;
+C++FLAGS on <uis>ui_gtk$(SUFOBJ) = `pkg-config --cflags gtk+-2.0` ;
 
 Library uis : ui_gtk.cpp ;
 
-UILINKLIBS = `gtk-config --libs` ;
+UILINKLIBS = `pkg-config --libs gtk+-2.0` ;
