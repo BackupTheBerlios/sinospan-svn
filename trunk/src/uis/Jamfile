@@ -1,7 +1,7 @@
 SubDir TOP uis ;
 
-C++FLAGS on <uis>ui_fltk$(SUFOBJ) = `fltk-config --cxxflags` ;
+C++FLAGS on <uis>ui_gtk$(SUFOBJ) = `gtk-config --cflags` ;
 
-Library uis : ui_fltk.cpp ;
+Library uis : ui_gtk.cpp ;
 
-UILINKLIBS = `fltk-config --ldflags` ;
+UILINKLIBS = `gtk-config --libs` ;
