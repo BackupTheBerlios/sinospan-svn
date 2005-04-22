@@ -41,8 +41,8 @@ static Driver *pMakeUiDriver()
 {
 	Driver *ret = 0;
 
-#ifdef USE_UI_FLTK
-	ret = new UI_FLTK;
+#ifdef USE_UI_GTK
+	ret = new UI_GTK;
 	if(ret != 0) { return ret; }
 #endif
 	
