@@ -10,7 +10,7 @@ Licensed under the Open Software License version 2.1
 // Got JACK?
 #define HAVE_JACK
 
-// Got FLTK?
-#define HAVE_FLTK
+// Got GTK?
+#define HAVE_GTK
 
 #endif

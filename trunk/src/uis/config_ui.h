@@ -9,8 +9,8 @@ Licensed under the Open Software License version 2.1
 
 #include "config.h"
 
-#ifdef HAVE_FLTK
-#include "ui_fltk.h"
+#ifdef HAVE_GTK
+#include "ui_gtk.h"
 #endif
 
 #endif
