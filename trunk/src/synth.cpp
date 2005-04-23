@@ -23,7 +23,7 @@ sem_t pSynUp;
 
 bool Synth::Init()
 {
-	sem_init(&pSynUp);
+	sem_init(&pSynUp, 0, 0);
 	return true;
 }
 
@@ -96,8 +96,10 @@ inline unsigned short int Synth::outCt()
 float Synth::R_Render(float time)
 {
 	int synUpVal;
-	sem_getvalue(&SynUp, &synUpVal);
+	sem_getvalue(&pSynUp, &synUpVal);
 	if(synUpVal == 0) { return 0.0; } // Synth is disabled.
+	
+	ITC::R_GetEvents(ITC::OWNER_RENDER);
 	
 	float workBuf = 0.0;
 	unsigned short int i = 0;
@@ -108,6 +110,7 @@ float Synth::R_Render(float time)
 		while(j < outCt() )
 		{
 			workBuf += tracks[i]->outs[j].read();
+			j++;
 		}
 		i++;
 	}
