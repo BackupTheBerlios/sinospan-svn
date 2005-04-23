@@ -7,12 +7,16 @@ Licensed under the Open Software License version 2.1
 #ifndef SINOSPAN_MODULE_H
 #define SINOSPAN_MODULE_H
 
+struct Cell;
 struct Plug;
 struct Jack;
 
 struct Module
 {
+	Module();
 	virtual ~Module();
+	// Cell this module is in.
+	Cell *cel;
 	// Get the total number of input ports.
 	virtual unsigned short int inCt() const;
 	// Get the total number of output ports.

@@ -11,7 +11,7 @@
 #include "ramdude.h"
 #include "plug.h"
 
-Track::Track()
+Track::Track(): membCt(0)
 {
 	outs = new Plug[Synth::outCt()];
 }
@@ -36,6 +36,8 @@ void Track::AddCell(Cell *cel)
 	}
 	membs[membCt] = cel;
 	membCt++;
+	
+	cel->trk = this;
 }
 
 void Track::RemoveCell(Cell *cel)
@@ -66,6 +68,7 @@ void Track::R_Render(float time)
 	while(i < membCt)
 	{
 		membs[i]->R_Render(time);
+		i++;
 	}
 }
 

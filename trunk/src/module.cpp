@@ -5,6 +5,8 @@
 #include "jack.h"
 #include "plug.h"
 
+Module::Module(): cel(0x0) {}
+
 void Module::allocPorts()
 {
 	outputs = new Jack[outCt()];

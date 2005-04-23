@@ -9,6 +9,8 @@
 #include "module.h"
 #include "ramdude.h"
 
+Cell::Cell(): membCt(0), trk(0x0) {}
+
 // No, I'm not going to combine Track, Cell, and part of Synth into a container
 // class. GCC / GDB get confused as all hell as it is.
 void Cell::AddModule(Module *mdl)
@@ -23,6 +25,8 @@ void Cell::AddModule(Module *mdl)
 	}
 	membs[membCt] = mdl;
 	membCt++;
+	
+	mdl->cel = this;
 }
 
 void Cell::RemoveModule(Module *mdl)
@@ -53,5 +57,6 @@ void Cell::R_Render(float time)
 	while(i < membCt)
 	{
 		membs[i]->R_Render(time);
+		i++;
 	}
 }

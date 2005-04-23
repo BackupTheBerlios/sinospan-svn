@@ -8,14 +8,19 @@ Licensed under the Open Software License version 2.1
 #define SINOSPAN_CELL_H
 
 struct Module;
+struct Track;
 
 #define CELL_MAX_MODULES 64
 
 struct Cell
 {
+	Cell();
 	// Modules in this cell.
 	Module *membs[CELL_MAX_MODULES];
 	unsigned short int membCt;
+	
+	// Track this cell is in.
+	Track *trk;
 
 	// Add another module to this cell.
 	// DANGER: Always allocate modules individually, and allocate them with
