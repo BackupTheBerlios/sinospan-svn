@@ -2,5 +2,5 @@ SubInclude TOP modules oscfuncs ;
 SubDir TOP modules ;
 
 Library modules : oscil.cpp ;
-LinkLibraries modules : oscfuncs ;
+LinkLibraries sinospan : oscfuncs ;
 MODULELINKLIBS = $(OSCFUNCLINKLIBS) -lm ;
