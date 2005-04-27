@@ -14,7 +14,7 @@ struct Track;
 
 struct Cell
 {
-	Cell();
+	Cell(); ~Cell();
 	// Modules in this cell.
 	Module *membs[CELL_MAX_MODULES];
 	unsigned short int membCt;

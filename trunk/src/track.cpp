@@ -18,6 +18,13 @@ Track::Track(): membCt(0)
 
 Track::~Track()
 {
+	// Deleting cells/tracks is supposed to be recursive.
+	unsigned int i = 0;
+	while(i < membCt)
+	{
+		delete membs[i];
+		i++;
+	}
 	delete[] outs;
 }
 

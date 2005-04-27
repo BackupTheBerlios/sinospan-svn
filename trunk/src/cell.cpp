@@ -11,6 +11,17 @@
 
 Cell::Cell(): membCt(0), trk(0x0) {}
 
+Cell::~Cell()
+{
+	// Deleting Tracks/Cells is supposed to be recursive.
+	unsigned int i = 0;
+	while(i < membCt)
+	{
+		delete membs[i];
+		i++;
+	}
+}
+
 // No, I'm not going to combine Track, Cell, and part of Synth into a container
 // class. GCC / GDB get confused as all hell as it is.
 void Cell::AddModule(Module *mdl)
