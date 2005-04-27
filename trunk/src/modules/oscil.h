@@ -14,6 +14,8 @@ struct Oscil : public Module
 {
 	// Osc function, phase, and frequency
 	Oscil(OscFunc*, float, float);
+	// Or just the function.
+	Oscil(OscFunc*);
 	~Oscil();
 
 	unsigned short int inCt() const;

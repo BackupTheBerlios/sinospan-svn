@@ -7,6 +7,11 @@
 // NOPORT?
 #include <math.h>	// floorf()
 
+Oscil::Oscil(OscFunc *f): func(f), phase(0.0), freq(20.0)
+{
+	allocPorts();
+}
+
 Oscil::Oscil(OscFunc *f, float p, float r): func(f), phase(p), freq(r)
 {
 	allocPorts();
