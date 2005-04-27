@@ -6,13 +6,17 @@
 
 #include <gtk/gtk.h>
 
-#include "cell.h"
 #include "itc.h"
-#include "track.h"
 #include "synth.h"
+#include "track.h"
+#include "cell.h"
+#include "module.h"
+#include "catalog.h"
 
 typedef std::map<Track*, GtkWidget*> pTrackAssoc_t;
 pTrackAssoc_t pTrackAssoc;
+typedef std::map<Cell*, GtkWidget*> pCellAssoc_t;
+pCellAssoc_t pCellAssoc;
 
 struct UI_GTK_CB
 {
@@ -20,7 +24,12 @@ struct UI_GTK_CB
 	static void RemoveTrack(GtkWidget*,gpointer);
 	static void AddCell(GtkWidget*,gpointer);
 	static void RemoveCell(GtkWidget*,gpointer);
-	static gboolean Delete(GtkWidget*,GdkEvent*,gpointer);
+	static void ModuleDialog(GtkWidget*,gpointer);
+	static void AddModule(GtkWidget*,gpointer);
+	static void RemoveModule(GtkWidget*,gpointer);
+	static gboolean DeleteDialog(GtkWidget*,GdkEvent*,gpointer);
+	static void DestroyDialog(GtkWidget*,gpointer);
+	static gboolean DeleteMain(GtkWidget*,GdkEvent*,gpointer);
 	static void DestroyMain(GtkWidget*,gpointer);
 };
 
@@ -41,7 +50,8 @@ bool UI_GTK::Go(int argc, char *argv[])
 	GtkWidget *mainWin = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(mainWin), "Sinospan");
 	g_signal_connect(G_OBJECT(mainWin), "delete_event",
-					G_CALLBACK(UI_GTK_CB::Delete), 0x0);
+					G_CALLBACK(UI_GTK_CB::DeleteMain),
+									0x0);
 	g_signal_connect(G_OBJECT(mainWin), "destroy",
 					G_CALLBACK(UI_GTK_CB::DestroyMain),
 									0x0);
@@ -165,8 +175,13 @@ void UI_GTK_CB::AddCell(GtkWidget *w, gpointer ptrk)
 			
 		gtk_box_pack_start(GTK_BOX(topBox), mdlPort, TRUE, TRUE, 0);
 		gtk_widget_show(mdlPort);
+		pCellAssoc.insert(pCellAssoc_t::value_type(cel, mdlBox) );
 		
-		// TODO: Add Module button
+		GtkWidget *addModBut = gtk_button_new_with_label("Add Module");
+		g_signal_connect(G_OBJECT(addModBut), "clicked",
+			G_CALLBACK(UI_GTK_CB::ModuleDialog), (gpointer) cel);
+		gtk_box_pack_start(GTK_BOX(topBox), addModBut, FALSE, TRUE, 0);
+		gtk_widget_show(addModBut);
 		
 		GtkWidget *remCellBut = gtk_button_new_with_label(
 								"Remove Cell");
@@ -191,9 +206,111 @@ void UI_GTK_CB::RemoveCell(GtkWidget *w, gpointer pcel)
 	// We're at the "remove track" button; Parent is the topBox.
 	GtkWidget *topBox = gtk_widget_get_parent(w);
 	gtk_widget_destroy(topBox);
+	pCellAssoc.erase(cel);
 }
 
-gboolean UI_GTK_CB::Delete(GtkWidget *w, GdkEvent *e, gpointer nul)
+struct pDialogData
+{
+	Cell *cel;
+	GtkWidget *win;
+	typedef std::map<GtkWidget*, Catalog::Entry*> btAssoc_t;
+	btAssoc_t btAssoc;
+	pDialogData(Cell *pcel): cel(pcel) {}
+};
+
+void UI_GTK_CB::ModuleDialog(GtkWidget *w, gpointer pcel)
+{
+	pDialogData *data = new pDialogData( (Cell*) pcel);
+	Catalog::Entry *cat; int catlen;
+	Catalog::Get(&cat, &catlen);
+	GtkWidget *addModWin = gtk_window_new(GTK_WINDOW_POPUP);
+	g_signal_connect(G_OBJECT(addModWin), "delete_event",
+					G_CALLBACK(UI_GTK_CB::DeleteDialog),
+									0x0);
+	g_signal_connect(G_OBJECT(addModWin), "destroy",
+					G_CALLBACK(UI_GTK_CB::DestroyDialog),
+							(gpointer) data);
+	data->win = addModWin;
+		GtkWidget *topBox = gtk_vbox_new(TRUE, 0);
+			int i = 0;
+			while(i < catlen)
+			{
+				GtkWidget *addBut = gtk_button_new_with_label(
+							cat[i].smry.c_str() );
+				g_signal_connect(G_OBJECT(addBut), "clicked", 
+					G_CALLBACK(UI_GTK_CB::AddModule),
+							(gpointer) data);
+				gtk_box_pack_start(GTK_BOX(topBox), addBut,
+								TRUE, TRUE, 0);
+				gtk_widget_show(addBut);
+				data->btAssoc.insert(
+					pDialogData::btAssoc_t::value_type(
+							addBut, &cat[i]) );
+				i++;
+			}
+		gtk_container_add(GTK_CONTAINER(addModWin), topBox);
+		gtk_widget_show(topBox);
+	gtk_widget_show(addModWin);
+}
+
+void UI_GTK_CB::AddModule(GtkWidget *w, gpointer pdata)
+{
+	struct funcdata {Cell *cel; Module *mdl; };
+	funcdata *dt = new funcdata;
+	pDialogData *data = (pDialogData*) pdata;
+	dt->cel = data->cel;
+	Catalog::Entry *ety = data->btAssoc.find(w)->second;
+	Module *mdl = Catalog::MakeModule(ety);
+	dt->mdl = mdl;
+	ITC_DEFER(callback_0, ITC::OWNER_RENDER, pdt, (void*) dt,
+	{
+		funcdata *dt = (funcdata*) pdt;
+		dt->cel->AddModule(dt->mdl);
+		ITC_DEFER(callback_1, ITC::OWNER_RAMDUDE, dt, (void*) dt,
+		{
+			delete (funcdata*) dt;
+		});
+	});
+	GtkWidget *mdlBox = pCellAssoc.find(data->cel)->second;
+	GtkWidget *topBox = gtk_vbox_new(FALSE, 0);
+		GtkWidget *lbl = gtk_label_new(ety->smry.c_str() );
+		gtk_box_pack_start(GTK_BOX(topBox), lbl, TRUE, TRUE, 0);
+		gtk_widget_show(lbl);
+		GtkWidget *remModBut = gtk_button_new_with_label("Remove");
+		g_signal_connect(G_OBJECT(remModBut), "clicked",
+			G_CALLBACK(UI_GTK_CB::RemoveModule), (gpointer) mdl);
+		gtk_box_pack_start(GTK_BOX(topBox), remModBut, FALSE, TRUE, 0);
+		gtk_widget_show(remModBut);
+	gtk_box_pack_start(GTK_BOX(mdlBox), topBox, FALSE, TRUE, 0);
+	gtk_widget_show(topBox);
+	
+	gtk_widget_destroy(data->win);
+}
+
+void UI_GTK_CB::RemoveModule(GtkWidget *w, gpointer tbd)
+{
+	Module *mdl = (Module*) mdl;
+	ITC_DEFER(callback_0, ITC::OWNER_RENDER, pmdl, (void*) mdl,
+	{
+		Module *mdl = (Module*) pmdl;
+		mdl->cel->RemoveModule(mdl);
+	});
+	// We're at the "remove module" button; Parent is the topBox.
+	GtkWidget *topBox = gtk_widget_get_parent(w);
+	gtk_widget_destroy(topBox);
+}
+
+gboolean UI_GTK_CB::DeleteDialog(GtkWidget *w, GdkEvent *e, gpointer nul)
+{
+	return FALSE;
+}
+
+void UI_GTK_CB::DestroyDialog(GtkWidget *w, gpointer data)
+{
+	delete (pDialogData*) data;
+}
+
+gboolean UI_GTK_CB::DeleteMain(GtkWidget *w, GdkEvent *e, gpointer nul)
 {
 	gtk_main_quit();
 	return FALSE;
